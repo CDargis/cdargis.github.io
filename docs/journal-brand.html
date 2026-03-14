@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Strain Journal — Brand</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Share+Tech+Mono&display=swap');
+
+  :root {
+    --bg:         #111009;
+    --surface:    #1a1810;
+    --surface2:   #221f14;
+    --border:     #2e2b1e;
+    --text:       #d4cdb8;
+    --dim:        #6b6450;
+    --gold:       #c9a84c;
+    --gold-dim:   #7a6530;
+    --green:      #7ab87a;
+    --green-dim:  #2a4a2a;
+    --red:        #c97a7a;
+    --red-dim:    #4a2a2a;
+    --purple:     #b07ab8;
+    --teal:       #7ab8b0;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .page { max-width: 900px; margin: 0 auto; padding: 60px 32px 100px; }
+
+  .sec { margin-bottom: 56px; }
+  .sec-label {
+    font-size: 9px; letter-spacing: 5px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 20px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .sec-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* ── HEADER ── */
+  .brand-header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 40px; margin-bottom: 56px;
+    display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 20px;
+  }
+  .brand-title { font-size: 10px; letter-spacing: 5px; color: var(--dim); text-transform: uppercase; margin-bottom: 12px; }
+  .brand-name  { font-size: 46px; font-weight: 700; letter-spacing: 6px; color: var(--text); line-height: 1; }
+  .brand-name span { color: var(--green); }
+  .brand-sub   { font-family: 'Share Tech Mono', monospace; font-size: 11px; letter-spacing: 4px; color: var(--dim); margin-top: 10px; text-transform: uppercase; }
+  .brand-ver   { font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--dim); letter-spacing: 2px; text-align: right; }
+
+  /* ── PALETTE ── */
+  .palette-row { display: flex; gap: 2px; height: 96px; }
+  .swatch {
+    flex: 1; position: relative; cursor: default;
+    display: flex; flex-direction: column; justify-content: flex-end; padding: 10px 12px;
+    transition: flex .3s cubic-bezier(.4,0,.2,1);
+  }
+  .swatch:hover { flex: 2.4; }
+  .sw-name { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1px; }
+  .sw-hex  { font-family: 'Share Tech Mono', monospace; font-size: 10px; }
+  .sw-role { font-size: 8px; letter-spacing: 1px; opacity: .6; margin-top: 1px; }
+  .dk .sw-name, .dk .sw-hex, .dk .sw-role { color: rgba(255,255,255,.55); }
+  .lt .sw-name, .lt .sw-hex, .lt .sw-role { color: rgba(0,0,0,.5); }
+
+  .color-table { border: 1px solid var(--border); margin-top: 2px; }
+  .ct-row {
+    display: grid; grid-template-columns: 18px 100px 1fr 1fr 1fr;
+    align-items: center; gap: 16px;
+    padding: 11px 16px; border-bottom: 1px solid var(--border);
+    font-size: 11px;
+  }
+  .ct-row:last-child { border-bottom: none; }
+  .ct-dot  { width: 14px; height: 14px; flex-shrink: 0; }
+  .ct-hex  { font-family: 'Share Tech Mono', monospace; color: var(--text); }
+  .ct-name { color: var(--text); font-weight: 700; letter-spacing: 1px; }
+  .ct-role { color: var(--dim); }
+  .ct-use  { color: var(--dim); font-family: 'Share Tech Mono', monospace; font-size: 10px; }
+
+  /* ── LOGO / MARK ── */
+  .logo-row { display: flex; gap: 24px; flex-wrap: wrap; align-items: stretch; }
+  .logo-box {
+    border: 1px solid var(--border); padding: 32px 28px;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 16px; flex: 1; min-width: 190px;
+    background: var(--surface);
+  }
+  .logo-label { font-size: 9px; letter-spacing: 3px; color: var(--dim); text-transform: uppercase; }
+  .wordmark-lg { font-size: 26px; font-weight: 700; letter-spacing: 6px; color: var(--text); }
+  .wordmark-lg span { color: var(--green); }
+  .lockup-sub { font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:3px; color:var(--dim); text-transform:uppercase; }
+
+  @keyframes spin-s { to{ transform:rotate(360deg);  }}
+  @keyframes spin-r { to{ transform:rotate(-360deg); }}
+  @keyframes gp     { 0%,100%{opacity:.12}50%{opacity:.3} }
+  .ra { animation: spin-s 22s linear infinite; transform-origin: 52px 52px; }
+  .rb { animation: spin-r 15s linear infinite; transform-origin: 52px 52px; }
+  .gc { animation: gp 4s ease-in-out infinite; }
+
+  /* ── TYPOGRAPHY ── */
+  .type-table { border: 1px solid var(--border); }
+  .type-row {
+    display: flex; align-items: baseline; gap: 20px;
+    padding: 16px 20px; border-bottom: 1px solid var(--border); flex-wrap: wrap;
+  }
+  .type-row:last-child { border-bottom: none; }
+  .type-meta { min-width: 130px; font-size: 9px; letter-spacing: 2px; color: var(--dim); text-transform: uppercase; flex-shrink: 0; }
+  .ts-xl   { font-size: 32px; font-weight: 700; letter-spacing: 4px; color: var(--text); }
+  .ts-lg   { font-size: 20px; font-weight: 700; letter-spacing: 3px; color: var(--text); }
+  .ts-md   { font-size: 15px; letter-spacing: 1px; color: var(--text); }
+  .ts-sm   { font-size: 13px; color: var(--dim); }
+  .ts-mono { font-family:'Share Tech Mono',monospace; font-size:12px; letter-spacing:3px; color:var(--dim); text-transform:uppercase; }
+  .ts-gold   { font-size: 13px; color: var(--gold); }
+  .ts-green  { font-size: 13px; color: var(--green); }
+  .ts-purple { font-size: 13px; color: var(--purple); }
+  .ts-teal   { font-size: 13px; color: var(--teal); }
+  .ts-red    { font-size: 13px; color: var(--red); }
+
+  /* ── COMPONENTS ── */
+  .comp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media(max-width:600px){ .comp-grid{grid-template-columns:1fr} }
+
+  /* strain card */
+  .card-block { border: 1px solid var(--border); background: var(--surface); padding: 24px 20px; }
+  .card-block-label { font-size: 9px; letter-spacing: 3px; color: var(--dim); text-transform: uppercase; margin-bottom: 16px; }
+  .strain-card { border: 1px solid var(--border); background: var(--surface2); padding: 20px; }
+  .strain-card:hover { background: #282515; }
+  .strain-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+  .strain-name  { font-size: 14px; font-weight: 700; letter-spacing: 2px; color: var(--text); }
+  .strain-type  { font-size: 9px; letter-spacing: 2px; color: var(--green); border: 1px solid var(--green-dim); padding: 2px 7px; text-transform: uppercase; }
+  .strain-type.hybrid { color: var(--purple); border-color: #4a2a5a; }
+  .strain-type.indica { color: var(--teal); border-color: #1a3a38; }
+  .strain-meta  { font-size: 11px; color: var(--dim); margin-bottom: 10px; font-family:'Share Tech Mono',monospace; }
+  .strain-body  { font-size: 12px; color: var(--dim); line-height: 1.7; margin-bottom: 14px; }
+  .strain-tags  { display: flex; gap: 5px; flex-wrap: wrap; }
+  .stag { font-size: 9px; letter-spacing: 1px; padding: 3px 7px; border: 1px solid var(--border); color: var(--dim); }
+  .stag-g { border-color: var(--green-dim); color: var(--green); }
+  .stag-p { border-color: #4a2a5a; color: var(--purple); }
+  .stag-t { border-color: #1a3a38; color: var(--teal); }
+  .stag-r { border-color: var(--red-dim); color: var(--red); }
+
+  /* rating bar */
+  .rating-block { border: 1px solid var(--border); background: var(--surface); padding: 24px 20px; }
+  .rating-block-label { font-size: 9px; letter-spacing: 3px; color: var(--dim); text-transform: uppercase; margin-bottom: 16px; }
+  .rating-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .rating-row:last-child { margin-bottom: 0; }
+  .rating-key  { font-size: 10px; letter-spacing: 1px; color: var(--dim); min-width: 100px; }
+  .rating-bar  { flex: 1; height: 4px; background: var(--border); position: relative; }
+  .rating-fill { height: 100%; position: absolute; left: 0; top: 0; }
+  .rating-val  { font-family:'Share Tech Mono',monospace; font-size:10px; min-width:28px; text-align:right; }
+
+  /* buttons block */
+  .btn-block { border: 1px solid var(--border); background: var(--surface); padding: 24px 20px; }
+  .btn-block-label { font-size: 9px; letter-spacing: 3px; color: var(--dim); text-transform: uppercase; margin-bottom: 16px; }
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+  .btn-p {
+    background: var(--green); color: var(--bg); border: none;
+    padding: 9px 20px; font-family:'JetBrains Mono',monospace;
+    font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; cursor: pointer;
+  }
+  .btn-p:hover { background: #8acc8a; }
+  .btn-g {
+    border: 1px solid var(--border); color: var(--dim); background: none;
+    padding: 9px 20px; font-family:'JetBrains Mono',monospace;
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase; cursor: pointer;
+  }
+  .btn-g:hover { border-color: var(--teal); color: var(--teal); }
+  .btn-gold {
+    border: 1px solid var(--gold-dim); color: var(--gold); background: none;
+    padding: 9px 20px; font-family:'JetBrains Mono',monospace;
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase; cursor: pointer;
+  }
+  .btn-purple {
+    border: 1px solid #4a2a5a; color: var(--purple); background: none;
+    padding: 9px 20px; font-family:'JetBrains Mono',monospace;
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase; cursor: pointer;
+  }
+
+  /* notes / entry block */
+  .notes-block { border: 1px solid var(--border); background: var(--surface); padding: 24px 20px; grid-column: span 2; }
+  @media(max-width:600px){ .notes-block{grid-column:span 1} }
+  .notes-block-label { font-size: 9px; letter-spacing: 3px; color: var(--dim); text-transform: uppercase; margin-bottom: 16px; }
+  .entry {
+    border: 1px solid var(--border); background: var(--surface2); padding: 20px;
+    display: grid; grid-template-columns: 140px 1fr; gap: 20px;
+  }
+  .entry-meta { border-right: 1px solid var(--border); padding-right: 20px; }
+  .entry-date  { font-family:'Share Tech Mono',monospace; font-size:11px; color:var(--gold); letter-spacing:1px; margin-bottom:6px; }
+  .entry-strain{ font-size:13px; font-weight:700; color:var(--text); margin-bottom:4px; }
+  .entry-dose  { font-size:10px; color:var(--dim); }
+  .entry-badge { display:inline-block; font-size:9px; letter-spacing:2px; padding:3px 7px; margin-top:8px; }
+  .entry-body  { font-size:12px; color:var(--dim); line-height:1.8; }
+  .entry-body strong { color: var(--teal); font-weight:400; }
+  .entry-effects { display:flex; gap:6px; flex-wrap:wrap; margin-top:12px; }
+
+  /* ── USAGE ── */
+  .usage-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; background: var(--border); border: 1px solid var(--border); }
+  @media(max-width:560px){ .usage-grid{grid-template-columns:1fr} }
+  .usage-cell { background: var(--surface); padding: 20px; }
+  .usage-color { width: 28px; height: 28px; margin-bottom: 12px; }
+  .usage-name  { font-size: 11px; font-weight: 700; letter-spacing: 2px; margin-bottom: 4px; }
+  .usage-hex   { font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--dim); margin-bottom:10px; }
+  .usage-uses  { font-size:11px; color:var(--dim); line-height:1.7; list-style:none; }
+  .usage-uses li::before { content:'→ '; color:var(--border); }
+
+  /* footer */
+  .brand-footer {
+    border-top: 1px solid var(--border); margin-top: 60px; padding-top: 24px;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+  }
+  .bf-mark { font-size: 11px; letter-spacing: 3px; color: var(--dim); }
+  .bf-mark span { color: var(--green); }
+  .bf-ver { font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--dim); }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="brand-header">
+    <div>
+      <div class="brand-title">color system</div>
+      <div class="brand-name"><span>◈</span> STRAIN JOURNAL</div>
+      <div class="brand-sub">personal cannabis research log</div>
+    </div>
+    <div class="brand-ver">warm dark olive<br>v1.0</div>
+  </div>
+
+  <!-- 01 PALETTE -->
+  <div class="sec">
+    <div class="sec-label">01 · palette</div>
+
+    <div class="palette-row">
+      <div class="swatch dk" style="background:#111009">
+        <div class="sw-name">bg</div>
+        <div class="sw-hex">#111009</div>
+        <div class="sw-role">background</div>
+      </div>
+      <div class="swatch dk" style="background:#1a1810">
+        <div class="sw-name">surface</div>
+        <div class="sw-hex">#1a1810</div>
+        <div class="sw-role">card bg</div>
+      </div>
+      <div class="swatch dk" style="background:#d4cdb8; ">
+        <div class="sw-name" style="color:rgba(0,0,0,.5)">text</div>
+        <div class="sw-hex" style="color:rgba(0,0,0,.4)">#d4cdb8</div>
+        <div class="sw-role" style="color:rgba(0,0,0,.35)">body copy</div>
+      </div>
+      <div class="swatch lt" style="background:#c9a84c">
+        <div class="sw-name">gold</div>
+        <div class="sw-hex">#c9a84c</div>
+        <div class="sw-role">dates, labels</div>
+      </div>
+      <div class="swatch lt" style="background:#7ab87a">
+        <div class="sw-name">green</div>
+        <div class="sw-hex">#7ab87a</div>
+        <div class="sw-role">sativa / primary</div>
+      </div>
+      <div class="swatch lt" style="background:#7ab8b0">
+        <div class="sw-name">teal</div>
+        <div class="sw-hex">#7ab8b0</div>
+        <div class="sw-role">indica / links</div>
+      </div>
+      <div class="swatch lt" style="background:#b07ab8">
+        <div class="sw-name">purple</div>
+        <div class="sw-hex">#b07ab8</div>
+        <div class="sw-role">hybrid / effects</div>
+      </div>
+      <div class="swatch lt" style="background:#c97a7a">
+        <div class="sw-name">red</div>
+        <div class="sw-hex">#c97a7a</div>
+        <div class="sw-role">alerts / warnings</div>
+      </div>
+    </div>
+
+    <div class="color-table">
+      <div class="ct-row">
+        <div class="ct-dot" style="background:#111009; border:1px solid #333"></div>
+        <div class="ct-hex">#111009</div>
+        <div class="ct-name">Background</div>
+        <div class="ct-role">Deep olive-black, page base</div>
+        <div class="ct-use">--bg</div>
+      </div>
+      <div class="ct-row">
+        <div class="ct-dot" style="background:#1a1810"></div>
+        <div class="ct-hex">#1a1810</div>
+        <div class="ct-name">Surface</div>
+        <div class="ct-role">Cards, panels</div>
+        <div class="ct-use">--surface</div>
+      </div>
+      <div class="ct-row">
+        <div class="ct-dot" style="background:#d4cdb8"></div>
+        <div class="ct-hex">#d4cdb8</div>
+        <div class="ct-name">Text</div>
+        <div class="ct-role">Warm off-white body copy</div>
+        <div class="ct-use">--text</div>
+      </div>
+      <div class="ct-row">
+        <div class="ct-dot" style="background:#c9a84c"></div>
+        <div class="ct-hex">#c9a84c</div>
+        <div class="ct-name">Gold</div>
+        <div class="ct-role">Dates, metadata, highlights</div>
+        <div class="ct-use">--gold</div>
+      </div>
+      <div class="ct-row">
+        <div class="ct-dot" style="background:#7ab87a"></div>
+        <div class="ct-hex">#7ab87a</div>
+        <div class="ct-name">Green</div>
+        <div class="ct-role">Sativa, positive effects, primary CTA</div>
+        <div class="ct-use">--green</div>
+      </div>
+      <div class="ct-row">
+        <div class="ct-dot" style="background:#7ab8b0"></div>
+        <div class="ct-hex">#7ab8b0</div>
+        <div class="ct-name">Teal</div>
+        <div class="ct-role">Indica, calm effects, links</div>
+        <div class="ct-use">--teal</div>
+      </div>
+      <div class="ct-row">
+        <div class="ct-dot" style="background:#b07ab8"></div>
+        <div class="ct-hex">#b07ab8</div>
+        <div class="ct-name">Purple</div>
+        <div class="ct-role">Hybrid, cerebral effects, tags</div>
+        <div class="ct-use">--purple</div>
+      </div>
+      <div class="ct-row">
+        <div class="ct-dot" style="background:#c97a7a"></div>
+        <div class="ct-hex">#c97a7a</div>
+        <div class="ct-name">Red</div>
+        <div class="ct-role">Alerts, adverse effects, warnings</div>
+        <div class="ct-use">--red</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 02 LOGO MARK -->
+  <div class="sec">
+    <div class="sec-label">02 · mark &amp; wordmark</div>
+    <div class="logo-row">
+
+      <div class="logo-box">
+        <svg width="104" height="104" viewBox="0 0 104 104" fill="none">
+          <defs>
+            <radialGradient id="jg1" cx="50%" cy="50%" r="50%">
+              <stop offset="0%"  stop-color="#7ab87a" stop-opacity=".15"/>
+              <stop offset="100%" stop-color="#7ab87a" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <circle class="gc" cx="52" cy="52" r="48" fill="url(#jg1)"/>
+          <circle class="ra" cx="52" cy="52" r="48" stroke="#c9a84c" stroke-width="1" stroke-dasharray="4 7" opacity=".3"/>
+          <circle class="rb" cx="52" cy="52" r="38" stroke="#7ab8b0" stroke-width="1" stroke-dasharray="2 8" opacity=".25"/>
+          <!-- leaf-like hexagon mark -->
+          <circle cx="52" cy="52" r="26" stroke="#7ab87a" stroke-width="2.5"/>
+          <!-- cross hairs -->
+          <line x1="52" y1="26" x2="52" y2="36" stroke="#7ab87a" stroke-width="1.5" opacity=".6"/>
+          <line x1="52" y1="68" x2="52" y2="78" stroke="#7ab87a" stroke-width="1.5" opacity=".6"/>
+          <line x1="26" y1="52" x2="36" y2="52" stroke="#7ab87a" stroke-width="1.5" opacity=".6"/>
+          <line x1="68" y1="52" x2="78" y2="52" stroke="#7ab87a" stroke-width="1.5" opacity=".6"/>
+          <!-- inner diamond -->
+          <path d="M52 36 L66 52 L52 68 L38 52 Z" stroke="#c9a84c" stroke-width="1.5" fill="none" opacity=".6"/>
+          <circle cx="52" cy="52" r="4" fill="#7ab87a" opacity=".9"/>
+          <!-- cardinal ticks -->
+          <line x1="52" y1="9"  x2="52" y2="16"  stroke="#c9a84c" stroke-width="1.2" opacity=".4"/>
+          <line x1="95" y1="52" x2="88" y2="52"  stroke="#c9a84c" stroke-width="1.2" opacity=".4"/>
+          <line x1="52" y1="95" x2="52" y2="88"  stroke="#c9a84c" stroke-width="1.2" opacity=".4"/>
+          <line x1="9"  y1="52" x2="16" y2="52"  stroke="#c9a84c" stroke-width="1.2" opacity=".4"/>
+        </svg>
+        <div style="text-align:center">
+          <div class="wordmark-lg"><span>◈</span> STRAIN JOURNAL</div>
+          <div class="lockup-sub">personal research log</div>
+        </div>
+        <div class="logo-label">primary lockup</div>
+      </div>
+
+      <div class="logo-box" style="justify-content:center; background:#0d0c08">
+        <svg width="72" height="72" viewBox="0 0 72 72" fill="none">
+          <circle cx="36" cy="36" r="26" stroke="#7ab87a" stroke-width="2.5"/>
+          <path d="M36 18 L50 36 L36 54 L22 36 Z" stroke="#c9a84c" stroke-width="1.5" fill="none" opacity=".7"/>
+          <circle cx="36" cy="36" r="4" fill="#7ab87a"/>
+        </svg>
+        <div class="logo-label">mark on deep bg</div>
+      </div>
+
+      <div class="logo-box">
+        <!-- icon-only small sizes -->
+        <div style="display:flex; gap:16px; align-items:center">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+            <circle cx="20" cy="20" r="15" stroke="#7ab87a" stroke-width="2"/>
+            <path d="M20 10 L28 20 L20 30 L12 20 Z" stroke="#c9a84c" stroke-width="1.2" fill="none" opacity=".7"/>
+            <circle cx="20" cy="20" r="2.5" fill="#7ab87a"/>
+          </svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="9" stroke="#7ab87a" stroke-width="1.5"/>
+            <circle cx="12" cy="12" r="2" fill="#7ab87a"/>
+          </svg>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <circle cx="8" cy="8" r="6" stroke="#7ab87a" stroke-width="1.2"/>
+            <circle cx="8" cy="8" r="1.5" fill="#7ab87a"/>
+          </svg>
+        </div>
+        <div class="logo-label">mark at small sizes</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 03 TYPOGRAPHY -->
+  <div class="sec">
+    <div class="sec-label">03 · typography</div>
+    <div class="type-table">
+      <div class="type-row">
+        <div class="type-meta">display<br>700 · ls:4px</div>
+        <div class="ts-xl">STRAIN JOURNAL</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">heading<br>700 · ls:3px</div>
+        <div class="ts-lg">Berry Bliss · GMO × Grape Pie</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">subheading<br>400 · ls:1px</div>
+        <div class="ts-md">Effects · Genetics · Dosage · Notes</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">body · 13px</div>
+        <div class="ts-sm">Relaxed, focused, mild body warmth. No ceiling effect at this dose. Would revisit at +0.1g.</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">label / mono</div>
+        <div class="ts-mono">◈ session log · 2026-03-14</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">accent colors</div>
+        <div style="display:flex; gap:20px; flex-wrap:wrap">
+          <div class="ts-gold">gold → dates</div>
+          <div class="ts-green">green → sativa</div>
+          <div class="ts-teal">teal → indica</div>
+          <div class="ts-purple">purple → hybrid</div>
+          <div class="ts-red">red → alerts</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 04 COMPONENTS -->
+  <div class="sec">
+    <div class="sec-label">04 · components</div>
+    <div class="comp-grid">
+
+      <!-- strain card -->
+      <div class="card-block">
+        <div class="card-block-label">strain card</div>
+        <div class="strain-card">
+          <div class="strain-header">
+            <div class="strain-name">Berry Bliss</div>
+            <div class="strain-type hybrid">Hybrid</div>
+          </div>
+          <div class="strain-meta">GMO × Grape Pie · Verano · 24.4% THC</div>
+          <div class="strain-body">Relaxed and focused. Mild body warmth, no ceiling at standard dose. GSC/Cookies lineage dominant.</div>
+          <div class="strain-tags">
+            <span class="stag stag-g">relaxed</span>
+            <span class="stag stag-p">focused</span>
+            <span class="stag stag-t">body warmth</span>
+            <span class="stag">0.15g</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ratings -->
+      <div class="rating-block">
+        <div class="rating-block-label">effect ratings</div>
+        <div class="rating-row">
+          <div class="rating-key">Relief</div>
+          <div class="rating-bar"><div class="rating-fill" style="width:85%;background:#7ab87a"></div></div>
+          <div class="rating-val" style="color:#7ab87a">8.5</div>
+        </div>
+        <div class="rating-row">
+          <div class="rating-key">Focus</div>
+          <div class="rating-bar"><div class="rating-fill" style="width:70%;background:#b07ab8"></div></div>
+          <div class="rating-val" style="color:#b07ab8">7.0</div>
+        </div>
+        <div class="rating-row">
+          <div class="rating-key">Relaxation</div>
+          <div class="rating-bar"><div class="rating-fill" style="width:90%;background:#7ab8b0"></div></div>
+          <div class="rating-val" style="color:#7ab8b0">9.0</div>
+        </div>
+        <div class="rating-row">
+          <div class="rating-key">Anxiety</div>
+          <div class="rating-bar"><div class="rating-fill" style="width:15%;background:#c97a7a"></div></div>
+          <div class="rating-val" style="color:#c97a7a">1.5</div>
+        </div>
+        <div class="rating-row">
+          <div class="rating-key">Duration</div>
+          <div class="rating-bar"><div class="rating-fill" style="width:75%;background:#c9a84c"></div></div>
+          <div class="rating-val" style="color:#c9a84c">2.5h</div>
+        </div>
+      </div>
+
+      <!-- buttons -->
+      <div class="btn-block">
+        <div class="btn-block-label">buttons &amp; controls</div>
+        <div class="btn-row">
+          <button class="btn-p">+ Log Session</button>
+          <button class="btn-g">View Notes</button>
+        </div>
+        <div class="btn-row">
+          <button class="btn-gold">◈ Genetics</button>
+          <button class="btn-purple">◈ Effects</button>
+        </div>
+      </div>
+
+      <!-- journal entry -->
+      <div class="notes-block">
+        <div class="notes-block-label">journal entry</div>
+        <div class="entry">
+          <div class="entry-meta">
+            <div class="entry-date">2026-03-07</div>
+            <div class="entry-strain">Dulce De Uva</div>
+            <div class="entry-dose">0.12g · vaporized</div>
+            <div class="entry-badge stag stag-t">Indica</div>
+          </div>
+          <div>
+            <div class="entry-body">
+              Isolated Grape Pie test. <strong>Notable body relaxation</strong> within 15 min. Cerebral activity lower than Berry Bliss — confirms the GSC component drives focus. <strong>Grape Pie lineage hypothesis</strong> holding up. No adverse effects at this dose.
+            </div>
+            <div class="entry-effects">
+              <span class="stag stag-t">body relax</span>
+              <span class="stag stag-g">mild euphoria</span>
+              <span class="stag">low anxiety</span>
+              <span class="stag stag-p">sedating</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 05 COLOR USAGE -->
+  <div class="sec">
+    <div class="sec-label">05 · color usage</div>
+    <div class="usage-grid">
+      <div class="usage-cell">
+        <div class="usage-color" style="background:#c9a84c"></div>
+        <div class="usage-name" style="color:#c9a84c">Gold</div>
+        <div class="usage-hex">#c9a84c</div>
+        <ul class="usage-uses">
+          <li>Session dates &amp; timestamps</li>
+          <li>Metadata labels</li>
+          <li>Section dividers</li>
+          <li>Rating durations</li>
+        </ul>
+      </div>
+      <div class="usage-cell">
+        <div class="usage-color" style="background:#7ab87a"></div>
+        <div class="usage-name" style="color:#7ab87a">Green</div>
+        <div class="usage-hex">#7ab87a</div>
+        <ul class="usage-uses">
+          <li>Sativa type badge</li>
+          <li>Positive effects</li>
+          <li>Primary CTA buttons</li>
+          <li>Logo mark</li>
+        </ul>
+      </div>
+      <div class="usage-cell">
+        <div class="usage-color" style="background:#7ab8b0"></div>
+        <div class="usage-name" style="color:#7ab8b0">Teal</div>
+        <div class="usage-hex">#7ab8b0</div>
+        <ul class="usage-uses">
+          <li>Indica type badge</li>
+          <li>Relaxation / calm effects</li>
+          <li>Links &amp; hover states</li>
+          <li>Body effect highlights</li>
+        </ul>
+      </div>
+      <div class="usage-cell">
+        <div class="usage-color" style="background:#b07ab8"></div>
+        <div class="usage-name" style="color:#b07ab8">Purple</div>
+        <div class="usage-hex">#b07ab8</div>
+        <ul class="usage-uses">
+          <li>Hybrid type badge</li>
+          <li>Cerebral / psychoactive effects</li>
+          <li>Genetics tags</li>
+          <li>Focus ratings</li>
+        </ul>
+      </div>
+      <div class="usage-cell">
+        <div class="usage-color" style="background:#c97a7a"></div>
+        <div class="usage-name" style="color:#c97a7a">Red</div>
+        <div class="usage-hex">#c97a7a</div>
+        <ul class="usage-uses">
+          <li>Adverse effect flags</li>
+          <li>Anxiety ratings</li>
+          <li>Dosage warnings</li>
+          <li>Alert states</li>
+        </ul>
+      </div>
+      <div class="usage-cell">
+        <div class="usage-color" style="background:#6b6450"></div>
+        <div class="usage-name" style="color:#6b6450">Dim</div>
+        <div class="usage-hex">#6b6450</div>
+        <ul class="usage-uses">
+          <li>Secondary labels</li>
+          <li>Inactive states</li>
+          <li>Borders &amp; rules</li>
+          <li>Background metadata</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="brand-footer">
+    <div class="bf-mark"><span>◈</span> STRAIN JOURNAL — Color System</div>
+    <div class="bf-ver">warm dark olive · v1.0</div>
+  </div>
+
+</div>
+</body>
+</html>
